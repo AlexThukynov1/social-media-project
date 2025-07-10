@@ -1,5 +1,3 @@
-// @ts-ignore
-import './common.css'
 import {Routes, Route} from 'react-router-dom';
 import SigninForm from "./_auth/forms/SigninForm.tsx";
 import {Home} from "lucide-react";
