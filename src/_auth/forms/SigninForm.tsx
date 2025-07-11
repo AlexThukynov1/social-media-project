@@ -1,9 +1,7 @@
-import {Button} from "@/components/ui/button.tsx";
-
 const SigninForm = () => {
     return (
         <div>
-            <Button>Sign in</Button>
+            Sign in
         </div>
     )
 }
