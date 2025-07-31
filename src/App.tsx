@@ -6,6 +6,7 @@ import {Home} from "lucide-react";
 import SignupForm from "./_auth/forms/SignupForm.tsx";
 import AuthLayout from "./_auth/AuthLayout.tsx";
 import RootLayout from "./_root/RootLayout.tsx";
+import {Toaster} from "@/components/ui/sonner.tsx";
 
 
 const App = () => {
@@ -24,6 +25,8 @@ const App = () => {
                    <Route index element={<Home/>}/>
                </Route>
            </Routes>
+
+            <Toaster/>
         </main>
     );
 };
