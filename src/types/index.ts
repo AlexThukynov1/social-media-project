@@ -1,3 +1,5 @@
+import * as React from "react";
+
 export type INavLink = {
     imgUrl: string;
     route: string;
@@ -48,4 +50,13 @@ export type IUpdatePost = {
     file: File[];
     location?: string;
     tags: string;
+}
+
+export type IContextType = {
+    user: IUser;
+    isLoading: boolean;
+    setUser: React.Dispatch<React.SetStateAction<IUser>>;
+    isAuthenticated: boolean;
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+    checkAuthUser: () => Promise<boolean>
 }
