@@ -2,6 +2,7 @@ import {createContext, useContext, useEffect, useState} from 'react'
 import type {IContextType, IUser} from "@/types";
 import {getCurrentUser} from "@/lib/appwrite/api.ts";
 import {useNavigate} from "react-router-dom";
+import {account} from "@/lib/appwrite/appwrite-config.ts";
 
 export const INITIAL_USER = {
     id: '',
@@ -55,9 +56,22 @@ const AuthProvider = ({children} : {children: React.ReactNode}) => {
             setIsLoading(false);
         }
     }
+    const checkUserSession = async () => {
+        try {
+            const userSesion = await account.get();
+            if(userSesion) {
+                navigate('/')
+            } else {
+                return false
+            }
+
+        } catch (error) {
+            return error
+        }
+    }
 
     useEffect(() => {
-        if(
+       if(
             localStorage.getItem('cookieFallback') === '[]' ||
             localStorage.getItem('cookieFallback') === null
 
@@ -65,6 +79,8 @@ const AuthProvider = ({children} : {children: React.ReactNode}) => {
             navigate('/sign-in')
         }
         checkAuthUser()
+        checkUserSession()
+
     }, [])
 
     const value = {
