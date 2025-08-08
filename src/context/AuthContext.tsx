@@ -76,7 +76,7 @@ const AuthProvider = ({children} : {children: React.ReactNode}) => {
             localStorage.getItem('cookieFallback') === null
 
         ) {
-            navigate('/sign-in')
+            navigate('/sign-up')
         }
         checkAuthUser()
         checkUserSession()
