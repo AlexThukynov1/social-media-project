@@ -1,9 +1,9 @@
 import * as React from "react";
 
 export type INavLink = {
-    imgUrl: string;
+    imageURL: string;
     route: string;
-    label: string;
+    title: string;
 }
 
 // USER TYPES

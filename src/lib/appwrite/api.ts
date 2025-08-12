@@ -80,3 +80,12 @@ export async function getCurrentUser() {
         console.error(error);
     }
 }
+
+export async function signOutAccount()  {
+    try {
+        const session = await account.deleteSessions('current');
+        return session
+    } catch (error) {
+        console.log (error);
+    }
+}
