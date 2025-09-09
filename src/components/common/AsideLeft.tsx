@@ -1,10 +1,22 @@
-import {Link, NavLink} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
 import {useUserContext} from "@/context/AuthContext.tsx";
 import {asideLInks} from "@/constants";
 import type {INavLink} from "@/types";
+import { useEffect } from "react";
+import { useSignOutAccountMutation } from "@/lib/react-query/queriesAndMutations";
+import path from "path";
+import { Button } from "../ui/button";
 
 const AsideLeft = () => {
     const {user} = useUserContext()
+    const {mutate: singOut, isSuccess} = useSignOutAccountMutation()
+    const navigate = useNavigate()
+    
+    useEffect(() => {
+        if(isSuccess) {
+            navigate('/sign-in')
+        }
+    }, [isSuccess])
 
     return (
         <nav className="leftsidebar">
@@ -43,8 +55,10 @@ const AsideLeft = () => {
                 <ul className="flex flex-col gap-6">
                     {
                         asideLInks.map((link: INavLink) => {
+                            const isActive = pathname === link.route;
+
                             return (
-                                <li key={link.title} className="leftsidebar-link">
+                                <li key={link.title} className="{`leftsidebar-link` ${isActive && 'bg-primary-500}}">
                                     <NavLink
                                         to={link.route}
                                         className="flex gap-4 items-center p-4"
@@ -52,7 +66,7 @@ const AsideLeft = () => {
                                         <img
                                             src={link.imageURL}
                                             alt={link.title}
-                                            className="group-hover:invert-white"
+                                            className="{`group-hover:invert-white ${isActive && 'invert-white'}`}"
                                         />
                                         {link.title}
                                     </NavLink>
@@ -62,6 +76,20 @@ const AsideLeft = () => {
                     }
                 </ul>
             </div>
+
+            <Button
+                className="shad-button_ghost"
+                variant="ghost"
+                onClick={() => singOut()}
+            >
+                <img
+                    src="/assets/icons/logout.svg"
+                    alt="Logout"
+                />
+                <p className="small-medium lg:base-medium">
+                    Logout
+                </p>
+            </Button>
         </nav>
     );
 };
