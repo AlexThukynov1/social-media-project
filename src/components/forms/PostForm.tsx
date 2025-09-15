@@ -14,22 +14,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
 import FileUploader from "../common/FileUploader"
-
-const formSchema = z.object({
-  caption: z.string().min(1, "Caption is required"),
-  file: z.any().optional(),
-  tags: z.string().optional(),
-})
-
-
- 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-  }
+import { PostValidation } from "@/lib/validation"
 
 export default function PostForm({post}) {
-const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+const form = useForm<z.infer<typeof PostValidation>>({
+    resolver: zodResolver(PostValidation),
     defaultValues: {
       caption: post ? post?.caption : "",
       file: [],
@@ -37,6 +26,10 @@ const form = useForm<z.infer<typeof formSchema>>({
       tags: post ? post?.tags.join(", ") : "",
     },
   })
+
+function onSubmit(values: z.infer<typeof PostValidation>) {
+    console.log(values)
+  }
 
   return (
     <Form {...form}>
@@ -81,6 +74,7 @@ const form = useForm<z.infer<typeof formSchema>>({
                   type="text" 
                   className="shad-input" 
                   placeholder="Learn, Design, Study"
+                  {...field}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />
