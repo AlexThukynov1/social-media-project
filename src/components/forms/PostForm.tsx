@@ -16,7 +16,7 @@ import { Textarea } from "../ui/textarea"
 import FileUploader from "../common/FileUploader"
 import { PostValidation } from "@/lib/validation"
 
-export default function PostForm({post}) {
+export default function PostForm({post}: PostFormProps) {
 const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
