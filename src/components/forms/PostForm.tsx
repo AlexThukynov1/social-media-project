@@ -14,28 +14,22 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
 import FileUploader from "../common/FileUploader"
+import { PostValidation } from "@/lib/validation"
 
-const formSchema = z.object({
-  caption: z.string().min(1, "Caption is required"),
-  file: z.any().optional(),
-  tags: z.string().optional(),
-})
-
-
- 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-  }
-
-export default function PostForm() {
-const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+export default function PostForm({post}: PostFormProps) {
+const form = useForm<z.infer<typeof PostValidation>>({
+    resolver: zodResolver(PostValidation),
     defaultValues: {
-      caption: "",
-      file: null,
-      tags: "",
+      caption: post ? post?.caption : "",
+      file: [],
+      location: post ? post?.location : "",
+      tags: post ? post?.tags.join(", ") : "",
     },
   })
+
+function onSubmit(values: z.infer<typeof PostValidation>) {
+    console.log(values)
+  }
 
   return (
     <Form {...form}>
@@ -60,7 +54,10 @@ const form = useForm<z.infer<typeof formSchema>>({
             <FormItem>
               <FormLabel className="shad-form_label">Add Photos</FormLabel>
               <FormControl>
-                <FileUploader/>
+                <FileUploader
+                  fieldChange={field.onChange}
+                  mediaUrl={post?.mediaUrl}
+                />
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
@@ -77,6 +74,7 @@ const form = useForm<z.infer<typeof formSchema>>({
                   type="text" 
                   className="shad-input" 
                   placeholder="Learn, Design, Study"
+                  {...field}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />
