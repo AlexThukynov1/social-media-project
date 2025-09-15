@@ -6,8 +6,8 @@ const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
   }, [])
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
-  
+
   return (
-    <div>FileUploader</div>
+    <div>File Uploader</div>
   )
 }
