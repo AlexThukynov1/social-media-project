@@ -27,13 +27,14 @@ const formSchema = z.object({
     console.log(values)
   }
 
-export default function PostForm() {
+export default function PostForm({post}) {
 const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      caption: "",
-      file: null,
-      tags: "",
+      caption: post ? post?.caption : "",
+      file: [],
+      location: post ? post?.location : "",
+      tags: post ? post?.tags.join(", ") : "",
     },
   })
 
@@ -60,7 +61,10 @@ const form = useForm<z.infer<typeof formSchema>>({
             <FormItem>
               <FormLabel className="shad-form_label">Add Photos</FormLabel>
               <FormControl>
-                <FileUploader/>
+                <FileUploader
+                  fieldChange={field.onChange}
+                  mediaUrl={post?.mediaUrl}
+                />
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
