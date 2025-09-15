@@ -1,16 +1,16 @@
-import {Link, NavLink, useNavigate} from "react-router-dom";
+import {Link, NavLink, useNavigate, useLocation} from "react-router-dom";
 import {useUserContext} from "@/context/AuthContext.tsx";
 import {asideLInks} from "@/constants";
 import type {INavLink} from "@/types";
 import { useEffect } from "react";
 import { useSignOutAccountMutation } from "@/lib/react-query/queriesAndMutations";
-import path from "path";
 import { Button } from "../ui/button";
 
 const AsideLeft = () => {
     const {user} = useUserContext()
     const {mutate: singOut, isSuccess} = useSignOutAccountMutation()
     const navigate = useNavigate()
+    const { pathname } = useLocation();
     
     useEffect(() => {
         if(isSuccess) {
@@ -58,7 +58,7 @@ const AsideLeft = () => {
                             const isActive = pathname === link.route;
 
                             return (
-                                <li key={link.title} className="{`leftsidebar-link` ${isActive && 'bg-primary-500}}">
+                                <li key={link.title} className={`leftsidebar-link ${isActive && 'bg-primary-500'}`}>
                                     <NavLink
                                         to={link.route}
                                         className="flex gap-4 items-center p-4"
@@ -66,7 +66,7 @@ const AsideLeft = () => {
                                         <img
                                             src={link.imageURL}
                                             alt={link.title}
-                                            className="{`group-hover:invert-white ${isActive && 'invert-white'}`}"
+                                            className={`group-hover:invert-white ${isActive && 'invert-white'}`}
                                         />
                                         {link.title}
                                     </NavLink>
