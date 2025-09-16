@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,8 +14,22 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
 import FileUploader from "../common/FileUploader"
 import { PostValidation } from "@/lib/validation"
+import type { Models } from "appwrite"
+import { useCreatePost } from "@/lib/react-query/queriesAndMutations"
+import { useUserContext } from "@/context/AuthContext"
+import {useToast} from "@/hooks/use-toast.ts";
+import { useNavigate } from "react-router-dom"
+
+type PostFormProps = {
+  post?: Models.Document
+}
 
 export default function PostForm({post}: PostFormProps) {
+const {mutateAsync: createPost, isPending: isLoadingCreate} = useCreatePost();
+const {user} = useUserContext();
+const {toast} = useToast();
+const navigate = useNavigate();
+
 const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
@@ -27,8 +40,19 @@ const form = useForm<z.infer<typeof PostValidation>>({
     },
   })
 
-function onSubmit(values: z.infer<typeof PostValidation>) {
-    console.log(values)
+async function onSubmit(values: z.infer<typeof PostValidation>) {
+    const newPost = await createPost({
+      ...values,
+      userId:user.id,
+    })
+
+    if(!newPost) {
+      toast({
+        title: 'Please try again',
+      })
+    };
+
+    navigate('/');
   }
 
   return (
