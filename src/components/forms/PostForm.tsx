@@ -81,7 +81,7 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
               <FormControl>
                 <FileUploader
                   fieldChange={field.onChange}
-                  mediaUrl={post?.mediaUrl}
+                  mediaUrl={post?.imageUrl}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />
