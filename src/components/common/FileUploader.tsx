@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {FileWithPath, useDropzone} from 'react-dropzone'
+import {type FileWithPath, useDropzone} from 'react-dropzone'
 import { Button } from "@/components/ui/button"
 
 type FileUploaderProps = {
