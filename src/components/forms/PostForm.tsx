@@ -1,7 +1,7 @@
-import { z } from "zod"
+import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button.tsx"
 import {
   Form,
   FormControl,
@@ -24,8 +24,7 @@ type PostFormProps = {
   post?: Models.Document
 }
 
-export default function PostForm({post}: PostFormProps) {
-const {mutateAsync: createPost, isPending: isLoadingCreate} = useCreatePostAccountMutation();
+const PostForm = ({post}: PostFormProps) => {
 const {user} = useUserContext();
 const {toast} = useToast();
 const navigate = useNavigate();
@@ -36,13 +35,16 @@ const form = useForm<z.infer<typeof PostValidation>>({
       caption: post ? post?.caption : "",
       file: [],
       location: post ? post.location : "",
-      tags: post ? post.tags.join(", ") : "",
+      tags: post ? post.tags.join(",") : "",
     },
   })
 
+  const {mutateAsync: createPost, isPending: isLoadingCreate} = useCreatePostAccountMutation();
+
+
 async function onSubmit(values: z.infer<typeof PostValidation>) {
-    console.log('tick')
-    const newPost = await createPost({
+    try{
+          const newPost = await createPost({
       ...values,
       userId:user.id,
     })
@@ -54,11 +56,22 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
     }
 
     navigate('/');
+    } catch (error) {
+      toast({
+        title: `Error: ${error}`,
+      })
+    }
+
   }
+   const submitTest = ()=> {
+    console.log('test');
+   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl">
+      <form 
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="flex flex-col gap-9 w-full max-w-5xl">
         <FormField
           control={form.control}
           name="caption"
@@ -88,6 +101,21 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
             </FormItem>
           )}
         />
+
+          <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shad-form_label">Add Location</FormLabel>
+              <FormControl>
+                <Input type="text" className="shad-input" {...field} />
+              </FormControl>
+              <FormMessage className="shad-form_message" />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="tags"
@@ -106,6 +134,7 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
             </FormItem>
           )}
         />
+        
         <div className="flex gap-4 items-center justify-end">
           <Button 
           type="button"
@@ -114,14 +143,21 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
             Cancel
           </Button>
           <Button 
-            type="submit"
+          type="submit"
+          disabled={isLoadingCreate}
             className="shad-button_primary whitespace-nowrap px-5 py-6"
           >
-            Submit
+            {isLoadingCreate ? 'Posting...' : 'Submit'}
           </Button>
+
+          {/* <button
+            onClick={onSubmit}
+          > test</button> */}
         </div>
 
       </form>
     </Form>
   )
 }
+
+export default PostForm
