@@ -147,17 +147,9 @@ export async function uploadFile(file: File) {
 
 export function getFilePreview(fileId: string) {
     try {
-        const fileUrl = storage.getFilePreview(
-            appwriteConfig.storageId,
-            fileId,
-            2000,
-            2000,
-            "top",
-            100
-        );
+        const fileUrl = storage.getFileView(appwriteConfig.storageId, fileId);
 
         if (!fileUrl) throw Error;
-
         return fileUrl;
     } catch (error) {
         console.log(error);
@@ -188,4 +180,59 @@ export async function getRecentPosts() {
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function likePost(postId: string, likesArray: string[]) {
+    try {
+       const updatePost = await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.postsCollectionId,
+            postId, 
+            {
+                likes: likesArray
+            }
+       )
+       
+       if(!updatePost) throw Error;
+
+        return updatePost;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function savePost(postId: string, userId: string) {
+    try {
+       const updatePost = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            ID.unique() , 
+            {
+                user: userId,
+                post: postId
+            }
+       )
+       
+       if(!updatePost) throw Error;
+       
+        return updatePost;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function deleteSavedPost(savedRecordId: string) {
+    try {
+       const updatePost = await databases.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            savedRecordId,
+       )
+       
+       if(!updatePost) throw Error;
+       
+        return {status: "ok"};
+    } catch (error) {
+        console.log(error);
+    }
 }
