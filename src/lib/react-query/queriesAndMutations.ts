@@ -1,7 +1,7 @@
 import {
     useMutation, useQuery, useQueryClient
 } from '@tanstack/react-query'
-import {createPost, createUserAccount, deleteSavedPost, getCurrentUser, getRecentPosts, likePost, savePost, signInAccount, signOutAccount} from "@/lib/appwrite/api.ts";
+import {createPost, createUserAccount, deleteSavedPost, getCurrentUser, getPostById, getRecentPosts, likePost, savePost, signInAccount, signOutAccount} from "@/lib/appwrite/api.ts";
 import type {INewPost, INewUser} from "@/types";
 import { QUERY_KEYS } from "@/lib/react-query/query-keys.ts";
 
@@ -105,5 +105,13 @@ export const useGetCurrentUserMutation = () => {
     return useQuery({
         queryKey: [QUERY_KEYS.GET_CURRENT_USER],
         queryFn: getCurrentUser
+    })
+}
+
+export const useGetPostByIdMutation = (postId: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+        queryFn: () => getPostById(postId),
+        enabled: !!postId
     })
 }
