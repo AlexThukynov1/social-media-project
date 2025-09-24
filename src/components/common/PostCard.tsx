@@ -40,7 +40,7 @@ export default function PostCard({post}: PostCardProps) {
             </div>
 
             <Link 
-                to={`/update-post/${post.$id}`}
+                to={`/update_post/${post.$id}`}
                 className={`${user.id !== post.creator.$id && "hidden"}`}   
             >
                 <img 

@@ -14,6 +14,7 @@ import CreatePostPage from './_root/pages/CreatePostPage.tsx';
 import UpdatePostPage from './_root/pages/UpdatePostPage.tsx';
 import ProfilePage from './_root/pages/ProfilePage.tsx';
 import UpdateProfilePage from './_root/pages/UpdateProfilePage.tsx';
+import PostDetails from './_root/pages/PostDetails.tsx';
 
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
                    <Route path="/all-users" element={<AllUsersPage/>}/>
                    <Route path="/create-post" element={<CreatePostPage/>}/>
                    <Route path="/update_post/:id" element={<UpdatePostPage/>}/>
+                    <Route path="/posts/:id" element={<PostDetails />} />
                    <Route path="/profile/:id/*" element={<ProfilePage/>}/>
                    <Route path="/updade_profile/:id" element={<UpdateProfilePage/>}/>
                </Route>

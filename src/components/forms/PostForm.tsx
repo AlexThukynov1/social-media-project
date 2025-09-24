@@ -19,12 +19,14 @@ import {useCreatePostAccountMutation} from "@/lib/react-query/queriesAndMutation
 import { useUserContext } from "@/context/AuthContext"
 import {useToast} from "@/hooks/use-toast.ts";
 import { useNavigate } from "react-router-dom"
+import { updatePost } from "@/lib/appwrite/api";
 
 type PostFormProps = {
-  post?: Models.Document
+  post?: Models.Document;
+  action: "Create" | "Update";
 }
 
-const PostForm = ({post}: PostFormProps) => {
+const PostForm = ({post, action}: PostFormProps) => {
 const {user} = useUserContext();
 const {toast} = useToast();
 const navigate = useNavigate();
@@ -32,7 +34,7 @@ const navigate = useNavigate();
 const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
-      caption: post ? post?.caption : "",
+      caption: post ? post.caption : "",
       file: [],
       location: post ? post.location : "",
       tags: post ? post.tags.join(",") : "",
@@ -43,6 +45,22 @@ const form = useForm<z.infer<typeof PostValidation>>({
 
 
 async function onSubmit(values: z.infer<typeof PostValidation>) {
+  if(post && action === "Update") {
+    const updatedPost = await updatePost({
+      ...values,
+      postId: post.$id,
+      imageUrl: post.imageUrl,
+      imageId: post.imageId,
+    })
+
+    if(!updatedPost) {
+      toast({
+        title: 'Please try again',
+      })
+    }
+    return navigate(`/posts/${post.$id}`);
+  }
+
     try{
           const newPost = await createPost({
       ...values,
@@ -63,9 +81,6 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
     }
 
   }
-   const submitTest = ()=> {
-    console.log('test');
-   };
 
   return (
     <Form {...form}>
@@ -147,12 +162,10 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
           disabled={isLoadingCreate}
             className="shad-button_primary whitespace-nowrap px-5 py-6"
           >
-            {isLoadingCreate ? 'Posting...' : 'Submit'}
+            {isLoadingCreate || isLoadingCreate && 'Posting...'}
+            {action} Post
           </Button>
 
-          {/* <button
-            onClick={onSubmit}
-          > test</button> */}
         </div>
 
       </form>
