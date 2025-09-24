@@ -21,10 +21,11 @@ import {useToast} from "@/hooks/use-toast.ts";
 import { useNavigate } from "react-router-dom"
 
 type PostFormProps = {
-  post?: Models.Document
+  post?: Models.Document;
+  action: "Create" | "Update";
 }
 
-const PostForm = ({post}: PostFormProps) => {
+const PostForm = ({post, action}: PostFormProps) => {
 const {user} = useUserContext();
 const {toast} = useToast();
 const navigate = useNavigate();
@@ -32,7 +33,7 @@ const navigate = useNavigate();
 const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
-      caption: post ? post?.caption : "",
+      caption: post ? post.caption : "",
       file: [],
       location: post ? post.location : "",
       tags: post ? post.tags.join(",") : "",
@@ -63,9 +64,6 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
     }
 
   }
-   const submitTest = ()=> {
-    console.log('test');
-   };
 
   return (
     <Form {...form}>
