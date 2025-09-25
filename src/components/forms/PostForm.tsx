@@ -34,7 +34,7 @@ const navigate = useNavigate();
 const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
-      caption: post ? post.caption : "",
+      caption: post ? post?.caption : "",
       file: [],
       location: post ? post.location : "",
       tags: post ? post.tags.join(",") : "",
@@ -58,7 +58,7 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
         title: 'Please try again',
       })
     }
-    return navigate(`/posts/${post.$id}`);
+    return navigate('/');
   }
 
     try{
@@ -159,7 +159,7 @@ async function onSubmit(values: z.infer<typeof PostValidation>) {
           </Button>
           <Button 
           type="submit"
-          disabled={isLoadingCreate}
+          disabled={isLoadingCreate || isLoadingCreate}
             className="shad-button_primary whitespace-nowrap px-5 py-6"
           >
             {isLoadingCreate || isLoadingCreate && 'Posting...'}
