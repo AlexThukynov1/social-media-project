@@ -1,9 +1,10 @@
 import { useUserContext } from "@/context/AuthContext";
 import type { Models } from "appwrite"
 import { Link } from "react-router-dom";
+import PostStats from "./PostStats";
 
 type GridPostListProps = {
-    post: Models.Document[];
+    posts: Models.Document[];
     showUser?: boolean;
     showStats?: boolean;
 }
@@ -43,6 +44,7 @@ export default function GridPostList({
                             />
                         </div>
                     )}
+                    {showStats && <PostStats post={post} userId={user.id}/>}
                 </div>
             </li>
         ))}
