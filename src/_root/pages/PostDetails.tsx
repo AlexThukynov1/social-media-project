@@ -1,33 +1,30 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 
-
-import {
-  useGetPostById,
-  useGetUserPosts,
-  useDeletePost,
-} from "@/lib/react-query/queries";
 import { multiFormatDateString } from "@/lib/utils";
 import { useUserContext } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/common/Loader";
 import PostStats from "@/components/common/PostStats";
+import { useDeletePostMutation, useGetPostByIdMutation, useGetUserPostsMutation } from "@/lib/react-query/queriesAndMutations";
+import GridPostList from "@/components/common/GridPostList";
 
 const PostDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useUserContext();
 
-  const { data: post, isLoading } = useGetPostById(id);
-  const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPosts(
+  const { data: post, isLoading } = useGetPostByIdMutation(id);
+  const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPostsMutation(
     post?.creator.$id
   );
-  const { mutate: deletePost } = useDeletePost();
+  const { mutate: deletePost } = useDeletePostMutation();
 
   const relatedPosts = userPosts?.documents.filter(
     (userPost) => userPost.$id !== id
   );
 
   const handleDeletePost = () => {
+    if (!id) return; // Prevent mutation if id is undefined
     deletePost({ postId: id, imageId: post?.imageId });
     navigate(-1);
   };

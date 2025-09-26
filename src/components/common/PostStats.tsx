@@ -12,6 +12,7 @@ type PostStatsProps = {
 export default function PostStats({post, userId}: PostStatsProps) {
     const likeList = post.likes.map((user: Models.Document) => user.$id); 
 
+
     const [likes, setLike] = useState(likeList);
     const [isSaved, setIsSaved] = useState(false);
 
@@ -26,7 +27,6 @@ export default function PostStats({post, userId}: PostStatsProps) {
 
         let newLikes = [...likes];
 
-        const hasLiked = newLikes.includes(userId);
         if(newLikes.includes(userId)) {
             newLikes = newLikes.filter((id) => id !== userId); 
         } else {
@@ -36,6 +36,9 @@ export default function PostStats({post, userId}: PostStatsProps) {
         setLike(newLikes);
         likePostMutate({postId: post.$id, likesArray: newLikes});
     }
+    console.log(currrentUser)
+    const savePostRecord = currrentUser?.save.find((record: Models.Document) => record.$id === post.$id);
+
     const handleSavePost = (e: React.MouseEvent) => {
         e.stopPropagation();
 
@@ -47,8 +50,6 @@ export default function PostStats({post, userId}: PostStatsProps) {
             setIsSaved(true);            
         }
     }
-
-    const savePostRecord = currrentUser?.save.find((record: Models.Document) => record.post.$id === post.$id);
 
     useEffect(() => {
         setIsSaved(!!savePostRecord)
