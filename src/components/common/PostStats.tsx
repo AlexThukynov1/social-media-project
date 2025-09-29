@@ -36,7 +36,6 @@ export default function PostStats({post, userId}: PostStatsProps) {
         setLike(newLikes);
         likePostMutate({postId: post.$id, likesArray: newLikes});
     }
-    console.log(currrentUser)
     const savePostRecord = currrentUser?.save.find((record: Models.Document) => record.$id === post.$id);
 
     const handleSavePost = (e: React.MouseEvent) => {
