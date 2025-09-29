@@ -1,18 +1,36 @@
 import GridPostList from "@/components/common/GridPostList";
+import Loader from "@/components/common/Loader";
 import SearchResult from "@/components/common/SearchResult";
 import { Input } from "@/components/ui/input";
-import { useSearchPostsMutation } from "@/lib/react-query/queriesAndMutations";
-import { useState } from "react";
+import useDebounce from "@/hooks/useDebounce";
+import { useGetPostsMutation, useSearchPostsMutation } from "@/lib/react-query/queriesAndMutations";
+import { useEffect, useState } from "react";
+import {useInView} from 'react-intersection-observer'
 
 
 export default function ExplorePage() {
   const [searchValue, setSearchValue] = useState('');
+  const {ref, inView} = useInView()
 
-  const {data: searchedPost, isFetching: isSearchFetch} = useSearchPostsMutation(searchValue)
+  const {data: posts, fetchNextPage, hasNextPage} = useGetPostsMutation()
+  const debauncedValue = useDebounce(searchValue, 500)
+  const {data: searchedPost, isFetching: isSearchFetch} = useSearchPostsMutation(debauncedValue)
 
   const showShowSearchResults = searchValue !== '';
   const shouldShowPosts = !showShowSearchResults 
-        && posts.pages.every((item) => item.documents.length === 0)
+        && posts?.pages.every((item) => item?.documents.length === 0)
+  
+  if(!posts) {
+    return (
+      <div className="flex-center w-full h-full">
+        <Loader/>
+      </div>
+    )
+  }
+
+  useEffect(()=>{
+    if(inView && !searchValue) fetchNextPage()
+  }, [inView, searchValue])
 
   return (
     <div className="explore-container">
@@ -50,7 +68,10 @@ export default function ExplorePage() {
 
       <div className="flex flex-wrap gap-9 w-full max-w-5xl">
         {showShowSearchResults ? (
-          <SearchResult/>
+          <SearchResult
+            isSearchFetching={isSearchFetch}
+            searchedPost={searchedPost}
+          />
         ) : shouldShowPosts ? (
           <p className="text-light-4 mt-10 text-center w-full">End of posts</p>
         ): posts.pages.map((item,index) => (
@@ -60,6 +81,12 @@ export default function ExplorePage() {
         />
         ))}
       </div>
+
+      {hasNextPage && searchValue && (
+        <div ref={ref} className="mt-10">
+          <Loader/>
+        </div>
+      )}
     </div>
   )
 }

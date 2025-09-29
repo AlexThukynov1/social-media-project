@@ -165,7 +165,7 @@ export const useGetPostsMutation = () => {
 
 export const  useSearchPostsMutation = (searchInput: string) => {
     return useQuery({
-        queryKey: [QUERY_KEYS.SEARCH_POSTS],
+        queryKey: [QUERY_KEYS.SEARCH_POSTS, searchInput],
         queryFn: () => searchPosts(searchInput),
         enabled: !!searchInput
     })
