@@ -13,10 +13,10 @@ export default function SearchResult({isSearchFetching, searchedPost}: SearchRes
 
 if(isSearchFetching) return <Loader/>
 
-if(searchedPost && searchedPost.documents.length > 0) {
+if(searchedPost && searchedPost.length > 0) {
   return (
     <GridPostList
-        posts={searchedPost.documents}
+        posts={searchedPost}
     />
   )  
 }

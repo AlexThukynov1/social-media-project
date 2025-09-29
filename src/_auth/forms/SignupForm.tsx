@@ -22,11 +22,11 @@ import {useUserContext} from "@/context/AuthContext.tsx";
 
 const SignupForm = () => {
     const {toast} = useToast();
-    const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
+    const {checkAuthUser} = useUserContext();
     const navigate = useNavigate();
 
     const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccountMutation();
-    const { mutateAsync: signInAccount, isPending: isSignIn } = useSignInAccountMutation()
+    const { mutateAsync: signInAccount } = useSignInAccountMutation()
 
     const form = useForm<z.infer<typeof SignupValidation>>({
         resolver: zodResolver(SignupValidation),
