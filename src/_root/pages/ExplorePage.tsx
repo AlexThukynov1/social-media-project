@@ -1,11 +1,14 @@
+import GridPostList from "@/components/common/GridPostList";
+import SearchResult from "@/components/common/SearchResult";
 import { Input } from "@/components/ui/input";
+import { useSearchPostsMutation } from "@/lib/react-query/queriesAndMutations";
 import { useState } from "react";
 
 
 export default function ExplorePage() {
   const [searchValue, setSearchValue] = useState('');
 
-  const posts = [];
+  const {data: searchedPost, isFetching: isSearchFetch} = useSearchPostsMutation(searchValue)
 
   const showShowSearchResults = searchValue !== '';
   const shouldShowPosts = !showShowSearchResults 
@@ -45,7 +48,18 @@ export default function ExplorePage() {
          </div>
       </div>
 
-      <div className="flex flex-wrap gap-9 w-full max-w-5xl"></div>
+      <div className="flex flex-wrap gap-9 w-full max-w-5xl">
+        {showShowSearchResults ? (
+          <SearchResult/>
+        ) : shouldShowPosts ? (
+          <p className="text-light-4 mt-10 text-center w-full">End of posts</p>
+        ): posts.pages.map((item,index) => (
+        <GridPostList
+          key={`page-${index}`}
+          posts={item.documents}
+        />
+        ))}
+      </div>
     </div>
   )
 }
