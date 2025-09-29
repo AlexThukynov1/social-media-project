@@ -1,13 +1,14 @@
 import GridPostList from "@/components/common/GridPostList";
 import SearchResult from "@/components/common/SearchResult";
 import { Input } from "@/components/ui/input";
+import { useSearchPostsMutation } from "@/lib/react-query/queriesAndMutations";
 import { useState } from "react";
 
 
 export default function ExplorePage() {
   const [searchValue, setSearchValue] = useState('');
 
-  const posts = [];
+  const {data: searchedPost, isFetching: isSearchFetch} = useSearchPostsMutation(searchValue)
 
   const showShowSearchResults = searchValue !== '';
   const shouldShowPosts = !showShowSearchResults 
