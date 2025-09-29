@@ -13,7 +13,7 @@ const PostDetails = () => {
   const { id } = useParams();
   const { user } = useUserContext();
 
-  const { data: post, isLoading } = useGetPostByIdMutation(id);
+  const { data: post, isLoading } = useGetPostByIdMutation(id || '');
   const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPostsMutation(
     post?.creator.$id
   );

@@ -152,7 +152,7 @@ export const useGetUserPostsMutation = (userId?: string) => {
 export const useGetPostsMutation = () => {
     return useInfiniteQuery({
         queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-        queryFn: getInfinitePosts,
+        queryFn: ({ pageParam = 0 }) => getInfinitePosts(pageParam),
         getNextPageParam: (lastPage) => {
             if(lastPage && lastPage.documents.length === 0) return null
             

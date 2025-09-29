@@ -5,9 +5,9 @@ import { useParams } from 'react-router-dom'
 
 export default function UpdatePostPage() {
   const {id} = useParams();
-  const {data: post, isPending} = useGetPostByIdMutation(id || '');
+  const {data: post, isLoading} = useGetPostByIdMutation(id || '');
 
-  if(isPending) return <Loader/>
+  if(isLoading) return <Loader/>
 
   return (
     <div className='flex flex-1'>
