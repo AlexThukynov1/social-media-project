@@ -149,7 +149,7 @@ export const useGetUserPostsMutation = (userId?: string) => {
   });
 }
 
-export const useGetPostsMutation = () => {
+export const useGetPostsQuery = () => {
     return useInfiniteQuery({
         queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
         queryFn: ({ pageParam = 0 }) => getInfinitePosts(pageParam),
@@ -163,7 +163,7 @@ export const useGetPostsMutation = () => {
     })
 }
 
-export const  useSearchPostsMutation = (searchInput: string) => {
+export const  useSearchPostsQuery = (searchInput: string) => {
     return useQuery({
         queryKey: [QUERY_KEYS.SEARCH_POSTS, searchInput],
         queryFn: () => searchPosts(searchInput),
