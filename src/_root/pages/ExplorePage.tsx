@@ -3,7 +3,7 @@ import Loader from "@/components/common/Loader";
 import SearchResult from "@/components/common/SearchResult";
 import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/useDebounce";
-import { useGetPostsMutation, useSearchPostsMutation } from "@/lib/react-query/queriesAndMutations";
+import { useGetPostsQuery, useSearchPostsQuery } from "@/lib/react-query/queriesAndMutations";
 import { useEffect, useState } from "react";
 import {useInView} from 'react-intersection-observer'
 
@@ -12,9 +12,9 @@ export default function ExplorePage() {
   const [searchValue, setSearchValue] = useState('');
   const {ref, inView} = useInView()
 
-  const {data: posts, fetchNextPage, hasNextPage} = useGetPostsMutation()
+  const {data: posts, fetchNextPage, hasNextPage} = useGetPostsQuery()
   const debauncedValue = useDebounce(searchValue, 500)
-  const {data: searchedPost, isFetching: isSearchFetch} = useSearchPostsMutation(debauncedValue)
+  const {data: searchedPost, isFetching: isSearchFetch} = useSearchPostsQuery(debauncedValue)
 
   const showShowSearchResults = searchValue !== '';
   const shouldShowPosts = !showShowSearchResults 
